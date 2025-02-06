@@ -17,17 +17,23 @@ namespace TennisRefactoringKata
 
         public void WonPoint(string playerName)
         {
-            var isNotPlayer = (playerName == player1Name) && (playerName == player2Name);
-
-            if (isNotPlayer) {
-                throw new ArgumentException("Invalid player name.");
-            }
+            CheckPlayerName(playerName);
 
             if (playerName == player1Name)
             {
                 player1Score++;
-            } else {
+            }
+            else
+            {
                 player2Score++;
+            }
+        }
+
+        private void CheckPlayerName(string playerName)
+        {
+            if ((playerName == player1Name) && (playerName == player2Name))
+            {
+                throw new ArgumentException("Invalid player name.");
             }
         }
 
