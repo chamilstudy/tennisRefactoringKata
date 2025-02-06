@@ -34,7 +34,16 @@
                 return player1SlangScore + "-" + player2SlangScore;
             }
         }
-
+        private string TieToTieSlang(int playerScore)
+        {
+            return playerScore switch
+            {
+                0 => "Love-All",
+                1 => "Fifteen-All",
+                2 => "Thirty-All",
+                _ => "Deuce",
+            };
+        }
         private string CheckMatchState()
         {
 
@@ -50,17 +59,6 @@
                 case <=2:
                     return "Win for player2";
             }
-        }
-
-        private string TieToTieSlang(int playerScore)
-        {
-            return playerScore switch
-            {
-                0 => "Love-All",
-                1 => "Fifteen-All",
-                2 => "Thirty-All",
-                _ => "Deuce",
-            };
         }
 
         private string ScoreToSlangScore(int playerScore)
