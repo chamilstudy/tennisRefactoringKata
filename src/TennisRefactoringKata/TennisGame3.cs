@@ -1,42 +1,67 @@
-﻿namespace TennisRefactoringKata
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace TennisRefactoringKata
 {
     public class TennisGame3 : ITennisGame
     {
-        private int p2;
-        private int p1;
-        private string p1N;
-        private string p2N;
+        private int player2Score;
+        private int player1Score;
+        private string player1Name;
+        private string player2Name;
 
         public TennisGame3(string player1Name, string player2Name)
         {
-            this.p1N = player1Name;
-            this.p2N = player2Name;
+            this.player1Name = player1Name;
+            this.player2Name = player2Name;
         }
 
         public string GetScore()
         {
-            string s;
-            if ((p1 < 4 && p2 < 4) && (p1 + p2 < 6))
+            var isNotEndGame = (player1Score < 4 && player2Score < 4) && (player1Score + player2Score < 6);
+            
+            if (isNotEndGame)
             {
-                string[] p = { "Love", "Fifteen", "Thirty", "Forty" };
-                s = p[p1];
-                return (p1 == p2) ? s + "-All" : s + "-" + p[p2];
+                if (player1Score == player2Score)
+                {
+                    return $"{ScoreSlang(player1Score)}-All";
+                } else {
+                    return $"{ScoreSlang(player1Score)}-{ScoreSlang(player2Score)}";
+                }
             }
             else
             {
-                if (p1 == p2)
-                    return "Deuce";
-                s = p1 > p2 ? p1N : p2N;
-                return ((p1 - p2) * (p1 - p2) == 1) ? "Advantage " + s : "Win for " + s;
+                string leadingPlayerName;
+                var advantageCheck = (player1Score - player2Score) * (player1Score - player2Score) == 1;
+                leadingPlayerName = player1Score > player2Score ? player1Name : player2Name;
+                
+                if (player1Score == player2Score)
+                    return "Deuce";                
+
+                if (advantageCheck) {
+                    return "Advantage " + leadingPlayerName;
+                } else {
+                    return "Win for " + leadingPlayerName;
+                }
             }
+        }
+
+        public string ScoreSlang(int playerScore) {
+            return playerScore switch
+            {
+                0 => "Love",
+                1 => "Fifteen",
+                2 => "Thirty",
+                3 => "Forty",
+                _ => ""
+            };
         }
 
         public void WonPoint(string playerName)
         {
             if (playerName == "player1")
-                this.p1 += 1;
+                this.player1Score++;
             else
-                this.p2 += 1;
+                this.player2Score++;
         }
 
     }
