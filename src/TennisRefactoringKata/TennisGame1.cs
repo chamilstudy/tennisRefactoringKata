@@ -2,8 +2,8 @@
 {
     public class TennisGame1 : ITennisGame
     {
-        private int m_score1 = 0;
-        private int m_score2 = 0;
+        private int player1Score = 0;
+        private int player2Score = 0;
         private string player1Name;
         private string player2Name;
 
@@ -15,67 +15,71 @@
 
         public void WonPoint(string playerName)
         {
-            if (playerName == "player1")
-                m_score1 += 1;
+            if (playerName == player1Name)
+            {
+                player1Score++;
+            }
             else
-                m_score2 += 1;
+            {
+                player2Score++;
+            }
         }
 
         public string GetScore()
         {
-            string score = "";
-            var tempScore = 0;
-            if (m_score1 == m_score2)
+            if (player1Score == player2Score)
             {
-                switch (m_score1)
-                {
-                    case 0:
-                        score = "Love-All";
-                        break;
-                    case 1:
-                        score = "Fifteen-All";
-                        break;
-                    case 2:
-                        score = "Thirty-All";
-                        break;
-                    default:
-                        score = "Deuce";
-                        break;
-
-                }
+                return TieToTieSlang(player1Score);
             }
-            else if (m_score1 >= 4 || m_score2 >= 4)
+            else if (CheckDeuce())
             {
-                var minusResult = m_score1 - m_score2;
-                if (minusResult == 1) score = "Advantage player1";
-                else if (minusResult == -1) score = "Advantage player2";
-                else if (minusResult >= 2) score = "Win for player1";
-                else score = "Win for player2";
+                return MatchScoreState();
             }
             else
             {
-                for (var i = 1; i < 3; i++)
-                {
-                    if (i == 1) tempScore = m_score1;
-                    else { score += "-"; tempScore = m_score2; }
-                    switch (tempScore)
-                    {
-                        case 0:
-                            score += "Love";
-                            break;
-                        case 1:
-                            score += "Fifteen";
-                            break;
-                        case 2:
-                            score += "Thirty";
-                            break;
-                        case 3:
-                            score += "Forty";
-                            break;
-                    }
-                }
+                return $"{ScoreToScoreSlang(player1Score)}-{ScoreToScoreSlang(player2Score)}";
             }
-            return score;
+        }
+
+        private string MatchScoreState()
+        {
+            var playerAdavantage = player1Score - player2Score;
+
+            return playerAdavantage switch
+            {
+                1 => "Advantage player1",
+                -1 => "Advantage player2",
+                >= 2 => "Win for player1",
+                _ => "Win for player2",
+            };
+        }
+
+        private string TieToTieSlang(int playerScore)
+        {
+            return playerScore switch
+            {
+                0 => "Love-All",
+                1 => "Fifteen-All",
+                2 => "Thirty-All",
+                _ => "Deuce",
+            };
+        }
+
+        private static string ScoreToScoreSlang(int playerScore)
+        {
+            return playerScore switch
+            {
+                0 => "Love",
+                1 => "Fifteen",
+                2 => "Thirty",
+                3 => "Forty",
+                _ => "",
+            };
+        }
+
+        private bool CheckDeuce()
+        {
+            return player1Score >= 4 || player2Score >= 4;
         }
     }
 }
