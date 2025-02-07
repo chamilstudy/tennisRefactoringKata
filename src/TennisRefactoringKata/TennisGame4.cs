@@ -40,6 +40,7 @@ public class TennisGame4  : ITennisGame
 
     private int ScoreState()
     {
+
         if (ServerScore >= 3 && ReceiverScore >= 3 && (ServerScore - ReceiverScore) == 1)
             return 0;
 

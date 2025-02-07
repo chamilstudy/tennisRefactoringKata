@@ -6,6 +6,7 @@ public class TennisGame6 : ITennisGame
     private int player2Score;
     private string player1Name;
     private string player2Name;
+    private string result;
 
     public TennisGame6(string player1Name, string player2Name)
     {
@@ -23,79 +24,56 @@ public class TennisGame6 : ITennisGame
 
     public string GetScore()
     {
-        string result;
-
         if (player1Score == player2Score)
         {
-            // tie score
-            string tieScore;
-            switch (player1Score)
-            {
-                case 0:
-                    tieScore = "Love-All";
-                    break;
-                case 1:
-                    tieScore = "Fifteen-All";
-                    break;
-                case 2:
-                    tieScore = "Thirty-All";
-                    break;
-                default:
-                    tieScore = "Deuce";
-                    break;
-            }
-
-            result = tieScore;
+            HandleEqualScore();
         }
         else if (player1Score >= 4 || player2Score >= 4)
         {
-            // end-game score
-            string endGameScore;
-
-            switch (player1Score - player2Score)
-            {
-                case 1:
-                    endGameScore = $"Advantage {player1Name}";
-                    break;
-                case -1:
-                    endGameScore = $"Advantage {player2Name}";
-                    break;
-                case >= 2:
-                    endGameScore = $"Win for {player1Name}";
-                    break;
-                default:
-                    endGameScore = $"Win for {player2Name}";
-                    break;
-            }
-
-            result = endGameScore;
+            HandleGamePoint();
         }
         else
         {
-            // regular score
-            string regularScore;
-
-            var score1 = player1Score switch
-            {
-                0 => "Love",
-                1 => "Fifteen",
-                2 => "Thirty",
-                _ => "Forty"
-            };
-
-            var score2 = player2Score switch
-            {
-                0 => "Love",
-                1 => "Fifteen",
-                2 => "Thirty",
-                _ => "Forty"
-            };
-
-            regularScore = $"{score1}-{score2}";
-
-            result = regularScore;
+            HandleTempScore();
         }
-
         return result;
+    }
+    private void HandleEqualScore()
+    {
+        result = player1Score switch
+        {
+            0 => "Love-All",
+            1 => "Fifteen-All",
+            2 => "Thirty-All",
+            _ => "Deuce"
+        };
+    }
+
+    private void HandleGamePoint()
+    {
+        result = (player1Score - player2Score) switch
+        {
+            1 => $"Advantage {player1Name}",
+            -1 => $"Advantage {player2Name}",
+            >= 2 => $"Win for {player1Name}",
+            <= -2 => $"Win for {player2Name}"
+        };
+    }
+    private void HandleTempScore()
+    {
+        var score1 = GetPlayerScore(player1Score);
+        var score2 = GetPlayerScore(player2Score);
+        result = $"{score1}-{score2}";
+    }
+
+    private string GetPlayerScore(int playerScore)
+    {
+        return playerScore switch
+        {
+            0 => "Love",
+            1 => "Fifteen",
+            2 => "Thirty",
+            _ => "Forty"
+        };
     }
 }
