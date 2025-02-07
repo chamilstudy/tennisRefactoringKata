@@ -28,63 +28,42 @@ public class TennisGame7 : ITennisGame
         if (player1Score == player2Score)
         {
             // tie score
-            switch (player1Score)
+            result += player1Score switch
             {
-                case 0:
-                    result += "Love-All";
-                    break;
-                case 1:
-                    result += "Fifteen-All";
-                    break;
-                case 2:
-                    result += "Thirty-All";
-                    break;
-                default:
-                    result += "Deuce";
-                    break;
-            }
+                0 => "Love-All",
+                1 => "Fifteen-All",
+                2 => "Thirty-All",
+                _ => "Deuce",
+            };
         }
         else if (player1Score >= 4 || player2Score >= 4)
         {
             // end-game score
-            switch (player1Score - player2Score)
+            result += (player1Score - player2Score) switch
             {
-                case 1:
-                    result += $"Advantage {player1Name}";
-                    break;
-                case -1:
-                    result += $"Advantage {player2Name}";
-                    break;
-                case >= 2:
-                    result += $"Win for {player1Name}";
-                    break;
-                default:
-                    result += $"Win for {player2Name}";
-                    break;
-            }
+                1 => $"Advantage {player1Name}",
+                -1 => $"Advantage {player2Name}",
+                >= 2 => $"Win for {player1Name}",
+                _ => $"Win for {player2Name}",
+            };
         }
         else
         {
             // regular score
-            result += player1Score switch
-            {
-                0 => "Love",
-                1 => "Fifteen",
-                2 => "Thirty",
-                _ => "Forty"
-            };
-
-            result += "-";
-
-            result += player2Score switch
-            {
-                0 => "Love",
-                1 => "Fifteen",
-                2 => "Thirty",
-                _ => "Forty"
-            };
+            result = $"{ScoreSlang(player1Score)}-{ScoreSlang(player2Score)}";
         }
 
         return result + ", enjoy your game!";
+    }
+
+    private static string ScoreSlang(int playerScore)
+    {
+        return playerScore switch
+        {
+            0 => "Love",
+            1 => "Fifteen",
+            2 => "Thirty",
+            _ => "Forty"
+        };
     }
 }
